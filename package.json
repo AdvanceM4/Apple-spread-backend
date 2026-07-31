@@ -1,0 +1,9 @@
+{
+  "name": "apple-spread-backend",
+  "version": "1.0.0",
+  "description": "Apple Spread Delivery backend",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  }
+}
