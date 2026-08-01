@@ -1,37 +1,50 @@
-const http = require("http");
+const express = require("express");
+const cors = require("cors");
 
-const delivery = {
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+const deliveries = [
+  {
     trackingNumber: "ASD-2026-001",
     status: "In Transit",
     location: "Lagos Distribution Center",
     estimatedDelivery: "August 5, 2026"
-};
+  },
+  {
+    trackingNumber: "ASD-2026-002",
+    status: "Delivered",
+    location: "Abuja",
+    estimatedDelivery: "August 1, 2026"
+  }
+];
 
-const server = http.createServer((request, response) => {
+app.get("/", (req, res) => {
+  res.json({
+    message: "Apple Spread Backend Running"
+  });
+});
 
-    response.setHeader(
-        "Access-Control-Allow-Origin",
-        "*"
-    );
+app.get("/api/track/:trackingNumber", (req, res) => {
 
-    response.setHeader(
-        "Content-Type",
-        "application/json"
-    );
+  const delivery = deliveries.find(
+    d => d.trackingNumber === req.params.trackingNumber
+  );
 
-    response.end(
-        JSON.stringify(delivery)
-    );
+  if (!delivery) {
+    return res.status(404).json({
+      message: "Tracking number not found"
+    });
+  }
+
+  res.json(delivery);
 
 });
 
-server.listen(
-    process.env.PORT || 3000,
-    () => {
+const PORT = process.env.PORT || 3000;
 
-        console.log(
-            "Apple Spread Delivery backend is running!"
-        );
-
-    }
-);
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
+});
